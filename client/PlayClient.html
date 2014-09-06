@@ -1,0 +1,14 @@
+<!doctype html>
+<html ng-app="ticTacToe">
+	<head>
+	 <link rel="stylesheet" href="TicTacToeStyle.css">	
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.0/angular.min.js"></script>
+	<script type="text/javascript" src="TicTacToeController.js"></script>
+	</head>
+	<body>
+		<div class="board" ng-controller="TicTacToeController">
+			<div>{{message}}</div>
+			<div class="cell" ng-click="selectStep($index)" ng-repeat="cell in board track by $index">{{getCellRepresentation($index)}}</div>
+		</div>
+	</body>
+</html>
