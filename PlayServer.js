@@ -29,14 +29,14 @@ var count = 0;
 var games = {};
 
 wsServer.on('request', function(r){ 
-
+console.log('recieved a game request');
 //TODO: change the protocol
 	var connection = r.accept('echo-protocol',r.origin);
 	var id = count++;
 	
-	var ticTactToeRemotePlayer = new TicTacToeRemotePlayer(connection);
+	var ticTactToeRemotePlayer = new TicTacToeRemotePlayer(connection, 3);
 	
-	games[id] = new TicTacToeGame(ticTactToeRemotePlayer,new AutomaticTicTacToePlayer());
+	games[id] = new TicTacToeGame(ticTactToeRemotePlayer,new AutomaticTicTacToePlayer(5));
 	
 	games[id].startGame();
 	
