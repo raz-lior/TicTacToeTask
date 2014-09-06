@@ -2,9 +2,10 @@ var TicTacToePlayer = require('./TicTacToePlayer');
 
 module.exports = TicTacToeRemotePlayer;
 
-function TicTacToeRemotePlayer(webSocketConnection)
+function TicTacToeRemotePlayer(webSocketConnection, battleSign)
 {
 	var pointerToCurrentObject = this;
+	this.BattleSign = battleSign;
 	this.Connection = webSocketConnection;
 	this.Connection.on('message',function(message) { pointerToCurrentObject.HandleStep(message); } );
 }
@@ -17,12 +18,16 @@ TicTacToeRemotePlayer.prototype.Notify = function(message){
 }
 
 TicTacToeRemotePlayer.prototype.HandleStep = function(message){
-	//TODO: convert to step object
 	
-	var locations = message.utf8Data.split(',');
-	
-	if(!this.Game.processStep({ x:locations[0], y:locations[1] } ))
+	if(this.Game.IsGameOver)
 	{
-		this.Notify('Step is either not valid or taken by other player.');
+		this.Notify('The game is over.');
+		return;
+	}
+	var stepRequest = JSON.parse(message.utf8Data);
+	
+	if(!this.Game.processStep(stepRequest))
+	{
+		this.Notify('Step is either not valid or taken by a player.');
 	}
 }

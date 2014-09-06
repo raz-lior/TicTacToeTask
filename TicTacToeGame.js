@@ -1,3 +1,4 @@
+var TurnResult = require('./TurnResult');
 
 module.exports = TicTacToeGame;
 
@@ -17,9 +18,17 @@ function TicTacToeGame(player1,player2)
 }
 
 TicTacToeGame.prototype.startGame = function(){
-
-	this.Player1.IsPlayerTurn = true;
+	
 	console.log((new Date()) + ' Game started.')
+	
+	var turnResult = new TurnResult();
+	turnResult.IsGameOver = false;
+	turnResult.Message = "Game has started.";
+	var message = JSON.stringify(turnResult);		
+	this.Player1.Notify(message);
+	this.Player2.Notify(message);
+	
+	this.Player1.SetPlayerTurn(true);
 }
 
 TicTacToeGame.prototype.processStep = function(step){
@@ -27,9 +36,22 @@ TicTacToeGame.prototype.processStep = function(step){
 	if(!this._isStepInsideBoard(step) || !this._isPositionEmpty(step))
 		return false;
 	
-	console.log('x: ' + step.x + ', y: ' + step.y);
-	
 	this._saveStep(step);
+	
+	if(this.Player1.IsPlayerTurn)
+	{
+		var turnResult = new TurnResult();
+		turnResult.OpponentStep = step;
+		
+		var message = JSON.stringify(turnResult);		
+		this.Player2.Notify(message);
+	}
+	else{
+		var turnResult = new TurnResult();
+		turnResult.OpponentStep = step;
+		var message = JSON.stringify(turnResult);		
+		this.Player1.Notify(message);
+	}
 	
 	if(this.IsGameOver)
 	{
@@ -45,15 +67,29 @@ TicTacToeGame.prototype.processStep = function(step){
 
 TicTacToeGame.prototype._endGame = function(){
 	
+	var turnResult = new TurnResult();
+	turnResult.IsGameOver = true;
+		
 	if(this.Winner === null)
 	{
-		this.Player1.Notify('You have tied.');
-		this.Player2.Notify('You have tied.');
+		turnResult.Message = 'You have tied.';
+		var message = JSON.stringify(turnResult);
+		
+		this.Player1.Notify(message);
+		this.Player2.Notify(message);
 	}
 	else
 	{
-		this.Winner.Notify('You won!');
-		this.Loser.Notify('You Lost.');
+		
+		turnResult.Message = 'You won!';
+		var messageToWinner = JSON.stringify(turnResult);
+		
+		this.Winner.Notify(messageToWinner);
+		
+		turnResult.Message = 'You Lost.';
+		var messageToLoser = JSON.stringify(turnResult);
+		
+		this.Loser.Notify(messageToLoser);
 	}
 }
 
