@@ -1,5 +1,5 @@
 
-var SERVER_PORT = 1234;
+var SERVER_PORT = 80;
 var http = require('http');
 var url = require("url");
 var path = require("path");
