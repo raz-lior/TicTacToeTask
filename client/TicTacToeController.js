@@ -1,6 +1,7 @@
 angular.module('ticTacToe',[]).controller('TicTacToeController',['$scope',
 function ($scope){
-	var ws = new WebSocket('ws://tictactoetask.herokuapp.com:10182', 'echo-protocol');
+	var host = location.origin.replace(/^http/, 'ws')
+	var ws = new WebSocket(host, 'echo-protocol');
 	
 	$scope.message = "";
 	$scope.isGameOver = true;
