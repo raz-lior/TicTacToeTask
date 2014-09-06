@@ -7,7 +7,7 @@ var fs = require("fs");
 var server = http.createServer(function(request, response){
 	console.log(request.url);
 	var uri = url.parse(request.url).pathname
-    , filename = path.join(process.cwd(), uri);
+    , filename = path.join(__dirname, uri);
     path.exists(filename, function(exists) {
     if(!exists) {
       response.writeHead(404, {"Content-Type": "text/plain"});
